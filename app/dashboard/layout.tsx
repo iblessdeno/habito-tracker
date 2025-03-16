@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState, Suspense, lazy } from 'react';
 import { Home, PlusCircle, Calendar, BarChart2, Settings } from 'lucide-react';
 import Link from 'next/link';
+import { AchievementTracker } from '@/components/achievement/achievement-tracker';
 
 // Loading component for suspense fallback
 const LoadingSpinner = () => (
@@ -24,6 +25,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeRoute, setActiveRoute] = useState('/dashboard');
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,6 +35,7 @@ export default function DashboardLayout({
         if (!data.session) {
           router.replace('/auth/login');
         } else {
+          setUserId(data.session.user.id);
           setIsLoading(false);
         }
       } catch (error) {
@@ -53,6 +56,8 @@ export default function DashboardLayout({
     <div className="flex h-screen bg-background">
       <SidebarComponent />
       <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        {/* Add AchievementTracker to initialize achievements for all users */}
+        {userId && <AchievementTracker userId={userId} />}
         <Suspense fallback={<LoadingSpinner />}>
           {children}
         </Suspense>

@@ -1,0 +1,470 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light theme colors based on mockup */
+  --background: #f5f5ff;
+  --foreground: #1a1a2e;
+  --card: #ffffff;
+  --card-foreground: #1a1a2e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a2e;
+  --primary: #1a1a2e;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f3f7;
+  --secondary-foreground: #1a1a2e;
+  --muted: #f3f3f7;
+  --muted-foreground: #64748b;
+  --accent: #f3f3f7;
+  --accent-foreground: #1a1a2e;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #94a3b8;
+  
+  /* Habit colors from mockup */
+  --exercise: #d7d1f8;
+  --read: #f0ff90;
+  --study: #b4f8f3;
+  --water: #c3e1ff;
+  --walk: #c9f5d2;
+  --meditate: #ffd1e3;
+  --cook: #ffd9c3;
+  --journal: #e0c3ff;
+  --health: #c3f5e9;
+  --self-care: #ffc3e9;
+  --digital: #c3d1ff;
+  --home: #fff4c3;
+  --social: #ffc3c3;
+  
+  /* Chart colors */
+  --chart-1: #4f46e5;
+  --chart-2: #0ea5e9;
+  --chart-3: #10b981;
+  --chart-4: #f59e0b;
+  --chart-5: #ef4444;
+  
+  --radius: 1rem;
+  
+  /* Sidebar colors */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a2e;
+  --sidebar-primary: #1a1a2e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f3f7;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #94a3b8;
+}
+
+.dark {
+  /* Dark theme colors */
+  --background: #0f0f1a;
+  --foreground: #f5f5ff;
+  --card: #1a1a2e;
+  --card-foreground: #f5f5ff;
+  --popover: #1a1a2e;
+  --popover-foreground: #f5f5ff;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #252538;
+  --secondary-foreground: #f5f5ff;
+  --muted: #252538;
+  --muted-foreground: #94a3b8;
+  --accent: #252538;
+  --accent-foreground: #f5f5ff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #252538;
+  --input: #252538;
+  --ring: #6366f1;
+  
+  /* Habit colors in dark mode - slightly adjusted for better contrast */
+  --exercise: #8a7df2;
+  --read: #d4e356;
+  --study: #7de8e0;
+  --water: #7db5e8;
+  --walk: #7de87d;
+  --meditate: #e87d8a;
+  --cook: #e8b87d;
+  --journal: #d47de8;
+  --health: #7de8c3;
+  --self-care: #e87dc3;
+  --digital: #7d7df2;
+  --home: #e8e87d;
+  --social: #e87d7d;
+  
+  /* Sidebar colors for dark mode */
+  --sidebar: #1a1a2e;
+  --sidebar-foreground: #f5f5ff;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #252538;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #334155;
+  --sidebar-ring: #94a3b8;
+}
+
+/* Base styles */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  :root {
+    --radius: 0.75rem;
+  }
+}
+
+/* Custom habit card styles */
+.habit-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.habit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.habit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+/* Progress bar styles */
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background-color: var(--muted);
+  overflow: hidden;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary);
+  transition: width 0.3s ease-in-out;
+}
+
+/* Day selector styles */
+.day-selector {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: none; /* Firefox */
+}
+
+.day-selector::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.day-selector-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 56px;
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+}
+
+.day-selector-item.selected {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.day-selector-item:not(.selected):hover {
+  background-color: var(--secondary);
+}
+
+.day-selector-day {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.day-selector-date {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.card-content {
+  margin-top: 0.5rem;
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+}
+
+.btn-secondary:hover {
+  opacity: 0.9;
+}
+
+/* Layout styles */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Dashboard specific styles */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+
+.dashboard-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Habit streak badge */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Top habit card */
+.top-habit-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-color: var(--card);
+}
+
+.top-habit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-color: var(--primary);
+}
+
+/* Quick links */
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.quick-link:hover {
+  background-color: var(--secondary);
+}
+
+.quick-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Mobile navigation bar */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease;
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+}
+
+.mobile-nav-item-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.mobile-nav-item-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Hide mobile nav on larger screens */
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* Add bottom padding on mobile to account for nav bar */
+@media (max-width: 767px) {
+  main {
+    padding-bottom: 80px !important;
+  }
+}

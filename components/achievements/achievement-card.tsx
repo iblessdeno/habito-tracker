@@ -1,91 +1,119 @@
-"use client"
+'use client';
 
-import { Achievement } from '@/types/habit-types'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Trophy, Star, Award, TrendingUp, Clock, CheckCircle2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useState } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, CheckCircle2, Calendar, Award, Users, Star } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface AchievementCardProps {
-  achievement: Achievement
+  achievement: {
+    id: string;
+    name: string;
+    description: string;
+    icon?: string;
+    type: string;
+    progress: number;
+    target: number;
+    achieved_at: string | null;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export function AchievementCard({ achievement }: AchievementCardProps) {
-  const isAchieved = achievement.achieved_at !== null
-  const progressPercentage = Math.min(100, Math.round((achievement.progress / achievement.target) * 100))
+  const [isHovering, setIsHovering] = useState(false);
   
+  const isAchieved = !!achievement.achieved_at;
+  const progressPercentage = Math.min(100, (achievement.progress / achievement.target) * 100);
+  
+  // Get appropriate icon based on achievement type
   const getAchievementIcon = () => {
     switch (achievement.type) {
       case 'streak':
-        return <TrendingUp className="h-5 w-5" />
+        return <TrendingUp className="h-5 w-5" />;
       case 'completion':
-        return <CheckCircle2 className="h-5 w-5" />
+        return <CheckCircle2 className="h-5 w-5" />;
       case 'consistency':
-        return <Clock className="h-5 w-5" />
+        return <Calendar className="h-5 w-5" />;
       case 'milestone':
-        return <Trophy className="h-5 w-5" />
+        return <Award className="h-5 w-5" />;
+      case 'social':
+        return <Users className="h-5 w-5" />;
       default:
-        return <Award className="h-5 w-5" />
+        return <Star className="h-5 w-5" />;
     }
-  }
+  };
   
-  const getAchievementTypeLabel = () => {
+  // Get color based on achievement type
+  const getAchievementColor = () => {
     switch (achievement.type) {
       case 'streak':
-        return 'Streak'
+        return 'bg-orange-500';
       case 'completion':
-        return 'Completion'
+        return 'bg-green-500';
       case 'consistency':
-        return 'Consistency'
+        return 'bg-blue-500';
       case 'milestone':
-        return 'Milestone'
+        return 'bg-amber-500';
+      case 'social':
+        return 'bg-purple-500';
       default:
-        return 'Achievement'
+        return 'bg-gray-500';
     }
-  }
+  };
   
   return (
-    <Card className={cn(
-      "transition-all duration-300",
-      isAchieved ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-background" : ""
-    )}>
+    <Card 
+      className={cn(
+        "overflow-hidden transition-all duration-300 border-2",
+        isAchieved ? "border-primary" : "border-muted",
+        isHovering && "shadow-lg"
+      )}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <div className={cn(
+        "h-1.5", 
+        isAchieved ? "bg-primary" : getAchievementColor(),
+        "opacity-60"
+      )} />
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg flex items-center">
-            <span className={cn(
-              "mr-2 p-1.5 rounded-full",
-              isAchieved ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" : "bg-muted text-muted-foreground"
-            )}>
-              {getAchievementIcon()}
-            </span>
-            {achievement.title}
+          <CardTitle className="text-lg font-semibold">
+            {achievement.name}
           </CardTitle>
-          {isAchieved && (
-            <Badge variant="outline" className="border-yellow-400 text-yellow-700 dark:text-yellow-400">
-              <Star className="h-3 w-3 mr-1 fill-yellow-500" />
-              Achieved
-            </Badge>
-          )}
-        </div>
-        <CardDescription>
-          {achievement.description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">{getAchievementTypeLabel()}</span>
-            <span className="font-medium">{achievement.progress} / {achievement.target}</span>
+          <div className="flex-shrink-0 text-2xl">
+            {achievement.icon || getAchievementIcon()}
           </div>
-          <Progress value={progressPercentage} className={isAchieved ? "bg-muted" : ""} />
+        </div>
+      </CardHeader>
+      <CardContent className="pb-2">
+        <p className="text-sm text-muted-foreground mb-4">
+          {achievement.description}
+        </p>
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs">
+            <span>Progress</span>
+            <span className="font-medium">
+              {achievement.progress} / {achievement.target}
+            </span>
+          </div>
+          <Progress value={progressPercentage} className="h-2" />
         </div>
       </CardContent>
-      {isAchieved && (
-        <CardFooter className="pt-0 text-xs text-muted-foreground">
-          Achieved on {new Date(achievement.achieved_at!).toLocaleDateString()}
-        </CardFooter>
-      )}
+      <CardFooter className="pt-0 flex justify-between items-center">
+        <Badge variant={isAchieved ? "default" : "outline"} className="capitalize">
+          {achievement.type}
+        </Badge>
+        {isAchieved && (
+          <span className="text-xs text-muted-foreground">
+            Achieved {formatDistanceToNow(new Date(achievement.achieved_at!), { addSuffix: true })}
+          </span>
+        )}
+      </CardFooter>
     </Card>
-  )
+  );
 }

@@ -45,7 +45,12 @@ const nextConfig = {
   output: 'standalone',
   // Configure images to allow Supabase domains
   images: {
-    domains: ['tzuzrcvwxpifbyjlwmyz.supabase.co'],
+    domains: [
+      // Extract domain from Supabase URL or use a fallback
+      process.env.NEXT_PUBLIC_SUPABASE_URL 
+        ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+        : 'supabase.co',
+    ],
   },
   // Disable TypeScript type checking and linting during build
   eslint: {

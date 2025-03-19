@@ -5,10 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from '@/components/ui/use-toast'
-import HabitInsights from '@/components/analytics/habit-insights'
+import { HabitInsights } from '@/components/analytics/habit-insights'
 import { Skeleton } from '@/components/ui/skeleton'
 import { LineChart, BarChart, PieChart } from '@/components/ui/charts'
-import { CalendarHeatmap } from '@/components/ui/calendar-heatmap'
 
 export default function StatisticsPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -150,7 +149,9 @@ export default function StatisticsPage() {
       completionRates,
       dailyCounts,
       streakInfo,
-      habitsByCategory: categorizeHabits(habits)
+      habitsByCategory: categorizeHabits(habits),
+      habits: habits,
+      habitLogs: habitLogs
     }
   }
   
@@ -266,7 +267,18 @@ export default function StatisticsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <HabitInsights />
+          {habitStats?.habits?.map((habit: any) => (
+            <HabitInsights 
+              key={habit.id}
+              habitId={habit.id}
+              logs={habitStats.habitLogs || []}
+            />
+          ))}
+          {!habitStats?.habits?.length && (
+            <div className="text-center py-4">
+              <p className="text-muted-foreground">No habits to analyze yet. Start by creating some habits!</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
